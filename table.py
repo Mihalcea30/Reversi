@@ -1,6 +1,7 @@
 import pygame
 import sys
 
+import scoreboard
 
 # Initialize Pygame
 pygame.init()
@@ -31,6 +32,7 @@ class Table:
         # Initialize both the matrix and the corresponding screen
         self.matrix = [[-1 for x in range(COLS)] for y in range(ROWS)]
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.scoreboard = scoreboard.Scoreboard()
         pygame.display.set_caption("Reversi")
         # Calculate the starting position to center the table
         self.start_x = 0

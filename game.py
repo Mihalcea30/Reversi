@@ -22,6 +22,7 @@ GREEN = (0, 128, 0)
 GREY = (169, 169, 169)
 BLUE = (0, 0, 255)
 FONT_SIZE = 40
+font = pygame.font.Font(None, 36)
 matrix = [[-1 for x in range(COLS)] for y in range(ROWS)]
 
 #direction vectors(N, NE, E, SE, S, SW, W, NW)
@@ -79,23 +80,32 @@ class Reversi:
     #Function to explore possible moves from a specific position
 
     def check_posibilities(self, x, y):
-
+      ok = False
       for direction in range(8):
         poz = self.check_line(x, y, direction, 1 - self.table.matrix[x][y], -1)
         if(poz != -1):
           self.table.add_circle(poz[1], poz[0], GREY, 1.3)
+          ok = True
+
       pygame.display.flip()
+      return ok
+
 
     def explore(self, turn): # check all possible moves for the current turn
 
+      ok = False
       for i in range (ROWS):
         for j in range (COLS):
           if self.check_element(i, j, turn):
-            self.check_posibilities(i, j)
+            if self.check_posibilities(i, j) == True:
+              ok = True
+      return ok
+
 
     #Function that makes a move in the game, picking a position coloring the valid lines
     def make_move(self, x, y, turn):
-
+      if self.table.matrix[x][y] != -1:
+        return -1 # if we choose an invalid position (one with an piece already on the table) we don t make a move
       if self.table.matrix[x][y] != turn:
         self.table.matrix[x][y] = turn
       for direction in range(8):
@@ -103,6 +113,23 @@ class Reversi:
           print("%")
           self.color_line(x, y, direction, 1 - turn)
 
+    #Function that shows the scoreboard with the current scores
+    def scoreboard(self, turn):
+
+
+      self.table.scoreboard.update_score(self.table.matrix)
+      self.table.screen.fill(WHITE, rect=(0, 0, 2000 , 150))
+      b = font.render("Black Score: " + str(self.table.scoreboard.black), True, BLACK)
+      w = font.render("White Score: " + str(self.table.scoreboard.white), True, BLACK)
+      blackturn = font.render("<-    Your Turn! ", True, BLACK)
+      whiteturn = font.render("<-    Your Turn! ", True, BLACK)
+
+      self.table.screen.blit(b, (20, 20))
+      self.table.screen.blit(w, (20, 60))
+      if(turn == 1):
+        self.table.screen.blit(blackturn, (240, 20))
+      else:
+        self.table.screen.blit(whiteturn, (240, 60))
 
 
     def game(self):
@@ -114,6 +141,7 @@ class Reversi:
         pygame.display.flip()
         running = True
         turn = 0
+        self.scoreboard(turn)
         self.explore(turn)
         while running:
             for event in pygame.event.get():
@@ -127,13 +155,13 @@ class Reversi:
                       row = (mouse_y - STARTY) // (SQUARE_SIZE )
                       col = (mouse_x - STARTX) //  (SQUARE_SIZE)
                       print(row, col)
-                      self.make_move(row, col, turn)
-                      for i in range(8):
-                        for j in range(8):
-                          print(self.table.matrix[i][j], end=",")
-                        print()
-                      turn = 1 - turn
-                      self.explore(turn)
+                      if self.table.Inside(row, col) and self.make_move(row, col, turn) != -1:
+                        #turn = 1 - turn
+                        self.scoreboard(turn)
+                        if(self.explore(1 - turn)):
+                          turn = 1 - turn
+                          self.explore(turn)
+
 
 
         # Quit Pygame
