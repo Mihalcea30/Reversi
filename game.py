@@ -110,7 +110,7 @@ class Reversi:
         self.table.matrix[x][y] = turn
       for direction in range(8):
         if(self.check_line(x, y, direction, 1 - turn, turn) != -1):
-          print("%")
+
           self.color_line(x, y, direction, 1 - turn)
 
     #Function that shows the scoreboard with the current scores
@@ -131,6 +131,29 @@ class Reversi:
       else:
         self.table.screen.blit(whiteturn, (240, 60))
 
+    #Function to determine the winner or if it's a tie
+    def result(self):
+      self.table.screen.fill(WHITE, rect=(0, 0, 2000, 150))
+      b = font.render("Black Won! " , True, BLACK)
+      w = font.render("White Won! " ,True, BLACK)
+      t = font.render("Tie! ", True, BLACK)
+      if(self.table.scoreboard.black > self.table.scoreboard.white):
+        self.table.screen.blit(b, (240, 20))
+      elif(self.table.scoreboard.black < self.table.scoreboard.white):
+        self.table.screen.blit(w, (240, 20))
+      else:
+        self.table.screen.blit(t, (240, 20))
+      pygame.display.flip()
+
+      #Function to determine if the table is full to end the game
+    def full_table(self):
+      n = len(self.table.matrix)
+      m = len(self.table.matrix[0])
+      for i in range(n):
+        for j in range(m):
+          if self.table.matrix[i][j] != -1:
+            return False
+      return True
 
     def game(self):
         # Main game loop
@@ -141,6 +164,8 @@ class Reversi:
         pygame.display.flip()
         running = True
         turn = 0
+        nomove = 0
+
         self.scoreboard(turn)
         self.explore(turn)
         while running:
@@ -154,13 +179,23 @@ class Reversi:
                       mouse_x, mouse_y = pygame.mouse.get_pos()
                       row = (mouse_y - STARTY) // (SQUARE_SIZE )
                       col = (mouse_x - STARTX) //  (SQUARE_SIZE)
-                      print(row, col)
                       if self.table.Inside(row, col) and self.make_move(row, col, turn) != -1:
                         #turn = 1 - turn
                         self.scoreboard(turn)
                         if(self.explore(1 - turn)):
+                          nomove = 0
                           turn = 1 - turn
                           self.explore(turn)
+                        else:
+                          nomove+=1
+                          if(not self.explore(turn)):
+                            nomove +=1
+
+            if (nomove == 2 or self.full_table()):  # two consecutive no move rounds or table is full -> the game is over
+              self.result()
+
+
+
 
 
 

@@ -1,3 +1,5 @@
+import time
+
 import pygame
 import sys
 
@@ -40,7 +42,6 @@ class Table:
 
     # Function to add a circle to add a circle in a given square
     def add_circle(self, column, row, color, type):
-
         pygame.draw.circle(self.screen, color,
                            (column * SQUARE_SIZE + SQUARE_SIZE // 2 + STARTX,
                             row * SQUARE_SIZE + SQUARE_SIZE // 2 + STARTY),
@@ -87,15 +88,8 @@ class Table:
       self.matrix[middle_row + 1][middle_col] = 1
       self.matrix[middle_row][middle_col + 1] = 1
       self.matrix[middle_row + 1][middle_col + 1] = 0
-      """self.add_circle(middle_col, middle_row, BLACK)
-      self.add_circle(middle_col + 1, middle_row, WHITE)
-      self.add_circle(middle_col, middle_row + 1, WHITE)
-      self.add_circle(middle_col + 1, middle_row + 1, BLACK)"""
+
       self.refresh_table()
       pygame.display.flip()
-      """self.add_circle(middle_col + 1, middle_row + 1, BLACK)
-      pygame.draw.circle(self.screen, GREY,
-                           ((middle_col + 2) * SQUARE_SIZE + SQUARE_SIZE // 2,
-                            (middle_row + 1) * SQUARE_SIZE + SQUARE_SIZE // 2),
-                           SQUARE_SIZE // 2 - 15)"""
+
 
