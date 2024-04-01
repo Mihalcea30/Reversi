@@ -1,4 +1,8 @@
 import game
+import reversi
+from Nod import Nod
 
-R = game.Reversi()
-R.game()
+
+
+R = game.Game()
+R.session(1)

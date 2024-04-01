@@ -40,7 +40,7 @@ class Table:
         self.start_x = 0
         self.start_y = 0
 
-    # Function to add a circle to add a circle in a given square
+    # Function to add a circle  in a given square
     def add_circle(self, column, row, color, type):
         pygame.draw.circle(self.screen, color,
                            (column * SQUARE_SIZE + SQUARE_SIZE // 2 + STARTX,
