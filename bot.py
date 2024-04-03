@@ -8,16 +8,17 @@ from Nod import Nod
 class Bot:
 
   def bot_move(self, table, turn, depth = 3):
-    bestScore = -math.inf
     bestMove = None
     current_state = Nod(table.matrix, turn)
     if(turn == 0):
+      bestScore = -math.inf
       for succesor in current_state.succesori():
         score = self.MiniMax(succesor, depth, True)
         if score > bestScore:
           bestScore = score
           bestMove = succesor
     else:
+      bestScore = math.inf
       for succesor in current_state.succesori():
         score = self.MiniMax(succesor, depth, False)
         if score < bestScore:

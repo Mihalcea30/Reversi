@@ -5,4 +5,4 @@ from Nod import Nod
 
 
 R = game.Game()
-R.session(1)
+R.session(0)

@@ -55,12 +55,20 @@ class Table:
     def refresh_table(self):
       for i in range(ROWS):
         for j in range(COLS):
+          if(self.matrix[i][j] == -1):
+            self.add_circle(j, i, GREEN, 1)
+      pygame.display.flip()
+      for i in range(ROWS):
+        for j in range(COLS):
           if self.matrix[i][j] == 1:
             self.add_circle(j, i, BLACK, 1)
+            time.sleep(0.05)
+            pygame.display.flip()
           elif self.matrix[i][j] == 0:
             self.add_circle(j, i, WHITE, 1)
-          else:
-            self.add_circle(j, i, GREEN, 1)
+            time.sleep(0.05)
+            pygame.display.flip()
+
 
 
 
