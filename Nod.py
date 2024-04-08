@@ -15,28 +15,32 @@ class Nod:
     self.father = father
     self.succesors = []
     self.poz = poz
+    #value = how white pieces are on the table, so the white player will be MAX and the black player will be MIN
+    #value2 = this value wil prioritize the corners, choosing them is a good strategy
     self.value = 0
+    self.value2 = 0
     for i in range(0, 8):
       for j in range(0, 8):
         if(self.matrix[i][j] == 0):
           self.value += 1
+          self.value2 += 1
+    #verifying the corners
+    if(self.matrix[0][0] == 0):
+      self.value2 += 10
+    if(self.matrix[0][7] == 0):
+      self.value2 += 10
+    if(self.matrix[7][0] == 0):
+      self.value2 += 10
+    if(self.matrix[7][7] == 0):
+      self.value2 += 10
 
   def __eq__(self, cls):
      return self.matrix == cls.matrix
 
-  #verificam daca starea in care suntem este una terminala
+  #check if the current node is a terminal node
   def terminal_node(self):
     return not (any(-1 in line for line in self.matrix))
 
-  def drumRadacina(self):
-    ''' Calculeaza lista nodurilor de la radacina pana la nodul curent. '''
-    if self.father is None:
-      return [self]
-    return self.father.drumRadacina() + [self]
-
-  def vizitat(self):
-    ''' Returneaza True daca nodul curent a fost deja vizitat, False altfel. '''
-    return len([1 for nod in self.drumRadacina() if nod == self]) > 1
 
   def Inside(self, i, j):
     return i >= 0 and i < ROWS and j >= 0 and j < COLS
@@ -91,11 +95,10 @@ class Nod:
       return -1
     if self.matrix[x][y] != turn and ok == True:
       self.matrix[x][y] = turn
-  def succesori(self):
-    ''' Calculeaza lista succesorilor directi ai starii curente.
 
-    :return: lista starilor admisibile
-    '''
+  # Function that returns the successors of a node, the possible moves
+  def succesori(self):
+
     succesori = []
     if (self.terminal_node()):
       return succesori

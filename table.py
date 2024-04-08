@@ -51,7 +51,8 @@ class Table:
     # Function that checks if a position is inside the table
     def Inside(self, i, j):
       return i >= 0 and i < ROWS and j >= 0 and j < COLS
-    # Function to check the matrix and color the table accordingly
+
+    # Function to check if the matrix had changed and color the table accordingly
 
     def refresh_table(self, old_board):
       for i in range(ROWS):
@@ -70,6 +71,8 @@ class Table:
               self.add_circle(j, i, WHITE, 1)
               time.sleep(0.05)
               pygame.display.flip()
+
+    # Function that refreshes a single element of the table, so the move can be seen
     def refresh_element(self, i):
       if(self.matrix[i[0]][i[1]] == -1):
         self.add_circle(i[1], i[0], GREEN, 1)
@@ -84,12 +87,7 @@ class Table:
 
     # Function to draw the Reversi board
     def draw_board(self):
-
-      """ for row in range(ROWS):
-                  for col in range(COLS):
-                      pygame.draw.rect(self.screen, GREEN,
-                                       (self.start_x + col * SQUARE_SIZE, self.start_y + row * SQUARE_SIZE,
-                                        SQUARE_SIZE, SQUARE_SIZE))"""
+      # Fill the background
       pygame.draw.rect(self.screen, GREEN, (STARTX, STARTY, TABLE_WIDTH, TABLE_HEIGHT))
       # Draw the grid lines
       for i in range(ROWS + 1):
