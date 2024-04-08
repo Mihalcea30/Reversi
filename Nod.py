@@ -9,11 +9,12 @@ COLS = 8
 
 class Nod:
 
-  def __init__(self, matrix, turn = 0, father = None) :
+  def __init__(self, matrix, poz, turn, father = None) :
     self.turn = turn
     self.matrix = matrix
     self.father = father
     self.succesors = []
+    self.poz = poz
     self.value = 0
     for i in range(0, 8):
       for j in range(0, 8):
@@ -102,7 +103,7 @@ class Nod:
     for i in range(0, 8):
       for j in range(0, 8):
         cpy_matrix = deepcopy(self.matrix)
-        cpy = Nod(cpy_matrix, self.turn, self.father)
+        cpy = Nod(cpy_matrix, (i, j), self.turn, self.father)
         #cpy.table.matrix = deepcopy(r.table.matrix)
         if (cpy.make_move(i, j, self.turn) != -1):
           if cpy.matrix == self.matrix:

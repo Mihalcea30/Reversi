@@ -76,7 +76,6 @@ class Reversi:
         j = j + dy[direction]
 
       self.table.matrix[i][j] = 1 - searched_value
-      self.table.refresh_table()
 
     #Function to explore possible moves from a specific position
 
@@ -117,7 +116,6 @@ class Reversi:
         return -1
       if self.table.matrix[x][y] != turn and ok == True:
         self.table.matrix[x][y] = turn
-        self.table.refresh_table()
 
     #Function that shows the scoreboard with the current scores
     def scoreboard(self, turn):
@@ -157,7 +155,7 @@ class Reversi:
       m = len(self.table.matrix[0])
       for i in range(n):
         for j in range(m):
-          if self.table.matrix[i][j] != -1:
+          if self.table.matrix[i][j] == -1:
             return False
       return True
 

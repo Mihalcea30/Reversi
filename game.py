@@ -1,9 +1,13 @@
 import sys
 import time
 import pygame
+import copy
 
 import bot
 import reversi
+from Nod import Nod
+
+
 class Game:
     def __init__(self):
         self.game = reversi.Reversi()
@@ -21,12 +25,18 @@ class Game:
       turn = 0
       nomove = 0
       if(turn == botturn):
-        self.game.table.matrix = bot_player.bot_move(self.game.table, turn).matrix
-        self.game.table.refresh_table()
+        bot_moved = bot_player.bot_move(self.game.table, turn)
+        old_board = copy.deepcopy(self.game.table.matrix)
+        self.game.table.matrix = copy.deepcopy(bot_moved.matrix)
+        self.game.table.refresh_element(bot_moved.poz)
+        self.game.table.refresh_table(old_board)
         turn = 1 - turn
       self.game.scoreboard(turn)
       self.game.explore(turn)
       while running:
+        if self.game.full_table():
+          self.game.result()
+
         for event in pygame.event.get():
           if event.type == pygame.QUIT:
             running = False
@@ -37,28 +47,28 @@ class Game:
               mouse_x, mouse_y = pygame.mouse.get_pos()
               row = (mouse_y - reversi.STARTY) // (reversi.SQUARE_SIZE)
               col = (mouse_x - reversi.STARTX) // (reversi.SQUARE_SIZE)
+              old_board = copy.deepcopy(self.game.table.matrix)
               if self.game.table.Inside(row, col) and self.game.make_move(row, col, turn) != -1:
                 # turn = 1 - turn
                 self.game.scoreboard(1-turn)
-                self.game.table.refresh_table()
-                print("Player's turn ended")
+                self.game.table.refresh_table(self.game.table.matrix)
+                self.game.table.refresh_element((row, col))
+                time.sleep(0.5)
+                self.game.table.refresh_table(old_board)
                 bot_move_copy = bot_player.bot_move(self.game.table, 1 - turn)
                 if (1-turn == botturn and bot_move_copy is not None):
-                  print("Bot's turn started")
-                  self.game.table.matrix = bot_move_copy.matrix
-                  print("Bot's turn ended")
-                  self.game.table.refresh_table()
+                  old_board = copy.deepcopy(self.game.table.matrix)
+                  self.game.table.matrix = copy.deepcopy(bot_move_copy.matrix)
+                  self.game.table.refresh_element(bot_move_copy.poz)
+                  time.sleep(0.5)
+                  self.game.table.refresh_table(old_board)
                   self.game.scoreboard(turn)
                   self.game.explore(turn)
                 elif(1-turn == botturn and bot_move_copy == None):
-                  nomove += 1
-                  self.game.table.refresh_table()
+
+                  #self.game.table.refresh_table()
                   self.game.scoreboard(turn)
                   self.game.explore(turn)
-                elif (self.game.explore(1 - turn)):
-                  nomove = 0
-                  turn = 1 - turn
-
                 else:
                   nomove += 1
                   if (not self.game.explore(turn)):

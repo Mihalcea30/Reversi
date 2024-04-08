@@ -2,6 +2,7 @@ import time
 
 import pygame
 import sys
+import copy
 
 import scoreboard
 
@@ -52,7 +53,7 @@ class Table:
       return i >= 0 and i < ROWS and j >= 0 and j < COLS
     # Function to check the matrix and color the table accordingly
 
-    def refresh_table(self):
+    def refresh_table(self, old_board):
       for i in range(ROWS):
         for j in range(COLS):
           if(self.matrix[i][j] == -1):
@@ -60,14 +61,23 @@ class Table:
       pygame.display.flip()
       for i in range(ROWS):
         for j in range(COLS):
-          if self.matrix[i][j] == 1:
-            self.add_circle(j, i, BLACK, 1)
-            time.sleep(0.05)
-            pygame.display.flip()
-          elif self.matrix[i][j] == 0:
-            self.add_circle(j, i, WHITE, 1)
-            time.sleep(0.05)
-            pygame.display.flip()
+          if self.matrix[i][j] != old_board[i][j]:
+            if self.matrix[i][j] == 1:
+              self.add_circle(j, i, BLACK, 1)
+              time.sleep(0.05)
+              pygame.display.flip()
+            elif self.matrix[i][j] == 0:
+              self.add_circle(j, i, WHITE, 1)
+              time.sleep(0.05)
+              pygame.display.flip()
+    def refresh_element(self, i):
+      if(self.matrix[i[0]][i[1]] == -1):
+        self.add_circle(i[1], i[0], GREEN, 1)
+      elif self.matrix[i[0]][i[1]] == 1:
+        self.add_circle(i[1], i[0], BLACK, 1)
+      elif self.matrix[i[0]][i[1]] == 0:
+        self.add_circle(i[1], i[0], WHITE, 1)
+      pygame.display.flip()
 
 
 
@@ -97,7 +107,8 @@ class Table:
       self.matrix[middle_row][middle_col + 1] = 1
       self.matrix[middle_row + 1][middle_col + 1] = 0
 
-      self.refresh_table()
+      empty_matrix = [[-1 for i in range(8)] for j in range(8)]
+      self.refresh_table(empty_matrix)
       pygame.display.flip()
 
 
